@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEditor;
 
 public class SeBalader : Task
-{   
-    public float moveSpeed = 3.0f;
-    public float rotSpeed = 100f;
+{
+    public float moveSpeed;
+    public float rotSpeed;
 
     public bool isWandering = false;
     public bool isRotatingLeft = false;
@@ -14,7 +14,15 @@ public class SeBalader : Task
     public bool isWalking = false;
 
 
-    public SeBalader(string name) : base(name) {}
+    public SeBalader(string name) : base(name) {
+        this.name = "Se Balader";
+    }
+
+    private void Start()
+    {
+        moveSpeed = 3.0f;
+        rotSpeed = 10.0f;
+    }
 
     override public void exec(GameObject agent)
     {

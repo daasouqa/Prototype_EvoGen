@@ -1,10 +1,17 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 
 public class Creature : MonoBehaviour
 {
+    // Motion speed of the creature
+    private float speed;
+    public float Speed
+    {
+        get => speed;
+        set => speed = value;
+    }
+
     // Hunger level of a creature
     private int hunger;
     public int Hunger
@@ -29,14 +36,29 @@ public class Creature : MonoBehaviour
         set => currentState = value;
     }
 
+    // Radius of vision of the creature
+    private float visionRadius;
+    public float VisionRadius
+    {
+        get => visionRadius;
+        set => visionRadius = value;
+    }
+
+    public Creature() { }
+
     // Returns the creatures in the field of view of the creature
-    public List<GameObject> GetPercepts(GameObject[] gameObjects)
+    public List<GameObject> GetPercepts(GameObject myself, GameObject[] gameObjects)
     {
         List<GameObject> percepts = new List<GameObject>();
-        foreach (GameObject gameObject in gameObjects)
+        foreach (GameObject go in gameObjects)
         {
-            //if in cone add to percepts
-        }
+
+            //if distance is short enough for the percept to be seen then add to percepts
+            if (Vector3.Distance(myself.gameObject.transform.position, go.transform.position) < Game.visionRadius)
+            {
+                percepts.Add(go);
+            }
+;        }
         return percepts;
     }
 }
