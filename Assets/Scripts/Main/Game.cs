@@ -3,9 +3,9 @@ using UnityEditor;
 
 public class Game
 {
-    //TODO: Make variables static
-    public static int maxHunger;
-    public static int maxReproductionNeed;
+    //TODO: Make variables static after test
+    public static int minHunger;
+    public static int minReproductionNeed;
 
 
 

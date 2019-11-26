@@ -5,7 +5,7 @@ public class Fuir : Task
 {
     public Fuir(string name) : base(name) { }
 
-    public override void exec()
+    public override void exec(GameObject agent)
     {
         //Fuir
     }

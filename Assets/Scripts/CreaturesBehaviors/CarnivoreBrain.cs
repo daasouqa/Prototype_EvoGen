@@ -4,23 +4,33 @@ using UnityEngine;
 
 public class CarnivoreBrain : Creature
 {
-    
 
-    SeBalader seBalader = new SeBalader("Se Balader");
+
+    SeBalader seBalader;
     Chasser chasser = new Chasser("Chasser");
 
     
 
     void Start()
     {
-        currentTask = seBalader;
+        this.seBalader = this.gameObject.AddComponent<SeBalader>();
+        this.CurrentState = seBalader;
         
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Si faim : Chasse
-        
+        /////////////////////////////
+
+        //// Choosing the state //////
+
+        /////////////////////////////
+
+        // Movements are implemented in the current task's exec function
+
+        // Update must end with this line:
+        CurrentState.exec(this.gameObject);
+
     }
 }

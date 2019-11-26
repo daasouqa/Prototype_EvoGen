@@ -6,7 +6,7 @@ public class Chasser : Task
 {
     public Chasser(string name) : base(name) { }
 
-    override public void exec()
+    override public void exec(GameObject agent)
     {
         //Chasser
     }

@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 
-public abstract class Task
+public abstract class Task : MonoBehaviour
 {
     public string name;
 
@@ -11,6 +11,6 @@ public abstract class Task
         this.name = name;
     }
 
-    public abstract void exec();
+    public abstract void exec(GameObject agent);
 }
 
