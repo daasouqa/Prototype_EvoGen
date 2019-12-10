@@ -5,7 +5,6 @@ using UnityEditor;
 
 public class SeBalader : Task
 {
-    public float moveSpeed;
     public float rotSpeed;
 
     public bool isWandering = false;
@@ -20,8 +19,7 @@ public class SeBalader : Task
 
     private void Start()
     {
-        moveSpeed = 3.0f;
-        rotSpeed = 10.0f;
+        rotSpeed = 15.0f;
     }
 
     override public void exec(GameObject agent)
@@ -45,18 +43,24 @@ public class SeBalader : Task
 
         if (isWalking)
         {
-            agent.transform.position += agent.transform.forward * moveSpeed * Time.deltaTime;
+            if (agent.GetComponent<HerbivoreBrain>() != null)
+            {
+                agent.transform.position += agent.transform.forward * agent.GetComponent<HerbivoreBrain>().Speed * Time.deltaTime;
+            } else
+            {
+                agent.transform.position += agent.transform.forward * agent.GetComponent<CarnivoreBrain>().Speed * Time.deltaTime;
+            }
+            
         }
-
     }
 
     IEnumerator Wander()
     {
-        int rotTime = Random.Range(1, 3);
-        int rotateWait = Random.Range(1, 4);
-        int rotateLorI = Random.Range(1, 2);
-        int walkWait = Random.Range(1, 4);
-        int walkTime = Random.Range(1, 5);
+        float rotTime = Random.Range(1, 3);
+        float rotateWait = Random.Range(1, 4);
+        float rotateLorI = Random.Range(1, 2);
+        float walkWait = Random.Range(1, 4);
+        float walkTime = Random.Range(1, 5);
 
         isWandering = true;
 

@@ -1,0 +1,27 @@
+				nom			Act/Pass	X1	X2	X3	X4	PNJ porteur
+
+Membres			Pattes_base		Pass		-	-	impossible	impossible	all
+				ailes			Pass		vol	vitesse vol +50%	impossible	impossible	all
+				Nageoir			Pass		nage	Vitesse nage +50%	impossible	impossible	all
+				Pattes_longues	Pass		Vitesse +50%	Vitesse +50%	impossible	impossible	all
+				Pattes_saut		act			saut	hauteur/distance +50%	-	-	all
+				Griffes			act			attaque	attaque+creuser	degats +25%	degats +25%	all
+				pouce_opp		act			grimper	-	-	-	all
+
+Tete			Dents_base		pass		frugivore	impossible	impossible	impossible	all
+				Dents_sec		pass		carnivore	impossible	impossible	impossible	all
+				Dents_loph		pass		herbivore	impossible	impossible	impossible	all
+				Dents_bun		pass		omnivore	impossible	impossible	impossible	all
+				Deffenses		act			creuser	creuser+attaque	degats +25%	degats +25%	all
+				Cornes			act			attaque degats 25%	degats +25%	degats +25%	degats +25%	all
+				crocs			act			attaque degats 25%	degats +25%	degats +25%	degats +25%	all
+
+corps			peau_base					Thermik	-	-	-	-	all
+				fourrure					Thermik	resistance au froid +25%	resistance +25%	resistance +25%	resistance +25%	pnj zone froide
+				plumes						Thermik	resistance au froid +25%	resistance +25%	resistance +25%	resistance +25%	pnj zone froide
+				Žcailles					Thermik	resistance au chaud +25%	resistance +25%	resistance +25%	resistance +25%	pnj zone chaude
+				voile						Thermik	resistance au chaud +50%	-	-	-	pnj zone chaude
+				cameleon					Autre	camouflage quand immobile	-	-	-	pnj special
+				carapace					Autre	dommage -25%	dommage -25%	dommage -25%	dommage -25%	all
+				Piquants					Autre	dommage -25%	dommage -25%	dommage -25%	dommage -25%	all
+				long_coup					Autre	atteindre la noriture en auteur	-	-	-	pnj special

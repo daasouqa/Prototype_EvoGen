@@ -6,10 +6,12 @@ public class CarnivoreBrain : Creature
 {
 
 
-    SeBalader seBalader;
-    Chasser chasser;
-    SeReproduire seReproduire;
-    Dead dead;
+    public SeBalader seBalader;
+    public Chasser chasser;
+    public SeReproduire seReproduire;
+    public Dead dead;
+
+    public Material deadMaterial;
 
     
 
@@ -23,6 +25,12 @@ public class CarnivoreBrain : Creature
 
         // Defining the initial state of the creature
         this.CurrentState = seBalader;
+
+        // Initializing different parameters of the creature
+        this.Hunger = Random.Range(Game.minHunger, 100);
+        this.ReproductiveNeed = Random.Range(Game.minReproductionNeed, 100);
+        this.Speed = Random.Range(1, 10);
+        this.gameObject.transform.Rotate(this.gameObject.transform.up * Random.Range(0, 180));
     }
 
     // Update is called once per frame

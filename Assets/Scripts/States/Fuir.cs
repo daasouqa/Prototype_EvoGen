@@ -29,10 +29,9 @@ public class Fuir : Task
             }
 
             // Run in the opposite direction of the closest predator
-            // Debug.Log("Speed = " + agent.GetComponent<HerbivoreBrain>().Speed);
+
             agent.transform.position = Vector3.MoveTowards(agent.transform.position, closestEnemy.transform.position, -1 *
-                agent.GetComponent<HerbivoreBrain>().Speed
-                * Time.deltaTime);
+                agent.GetComponent<HerbivoreBrain>().Speed * Time.deltaTime);
         }
     }
 }

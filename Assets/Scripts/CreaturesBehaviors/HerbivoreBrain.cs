@@ -10,6 +10,7 @@ public class HerbivoreBrain : Creature
     public SeNourir seNourir;
     public Fuir fuir;
     public Dead dead;
+    public Material deadMaterial;
 
     private void Start()
     {
@@ -29,7 +30,10 @@ public class HerbivoreBrain : Creature
         // Initializing different parameters of the creature
         this.Hunger = Random.Range(Game.minHunger, 100);
         this.ReproductiveNeed = Random.Range(Game.minReproductionNeed, 100);
-        this.Speed = Random.Range(1, 5);
+        this.Speed = Random.Range(1, 10);
+
+        // Initializing the initial rotation of the creature
+        this.gameObject.transform.Rotate(this.gameObject.transform.up * Random.Range(0, 360));
 
         // Defining the initial state of the creature
         this.CurrentState = seBalader;
@@ -41,28 +45,52 @@ public class HerbivoreBrain : Creature
         //// Choosing the state //////
         ///  Movements are implemented in the current task's exec function
 
+        // TODO: Check Hunger <= 0
         if (CurrentState != dead)
         {
-            List<GameObject> predators = GetPercepts(this.gameObject ,GameObject.FindGameObjectsWithTag("carnivore"));
-            if (predators.Count != 0)
+            if (this.Hunger <= 0 || this.ReproductiveNeed <= 0)
             {
-                CurrentState = fuir;
-            }
-            else
+                CurrentState = dead;
+            } else
             {
-                if (this.Hunger < Game.minHunger)
+                List<GameObject> predators = GetPercepts(this.gameObject, GameObject.FindGameObjectsWithTag("carnivore"));
+                if (predators.Count != 0)
                 {
-                    CurrentState = seNourir;
+                    CurrentState = fuir;
                 }
                 else
                 {
-                    if (this.ReproductiveNeed < Game.minReproductionNeed)
+                    if(this.CurrentState == seNourir)
                     {
-                        CurrentState = seReproduire;
+                        if (this.Hunger >= 99)
+                        {
+                            this.Hunger = 100;
+                            CurrentState = seBalader;
+                        }
+                    }else if (this.Hunger < Game.minHunger)
+                    {
+                        CurrentState = seNourir;
+                    }
+                    else
+                    {
+                        if (this.ReproductiveNeed < Game.minReproductionNeed)
+                        {
+                           CurrentState = seReproduire;
+                        }
+                        else
+                        {
+                            CurrentState = seBalader;
+                        }
                     }
                 }
             }
+            
         }
+
+        // Decrementing the creature's parameters every turn
+
+        this.Hunger -= 0.01f;
+        this.ReproductiveNeed -= 0.01f;
 
         // Update must end with this line:
         Debug.Log("Current State = " + CurrentState.name);

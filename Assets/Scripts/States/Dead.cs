@@ -9,6 +9,14 @@ public class Dead : Task
 
     public override void exec(GameObject agent)
     {
-        throw new System.NotImplementedException();
+        if (agent.GetComponent<HerbivoreBrain>() != null)
+        {
+            agent.GetComponent<MeshRenderer>().material = agent.GetComponent<HerbivoreBrain>().deadMaterial;
+        } else
+        {
+            agent.GetComponent<MeshRenderer>().material = agent.GetComponent<CarnivoreBrain>().deadMaterial;
+        }
+
+        
     }
 }

@@ -4,6 +4,47 @@ using System.Collections.Generic;
 
 public class Creature : MonoBehaviour
 {
+    // Characteristics
+    public enum Sex
+    {
+        MALE,
+        FEMALE
+    }
+
+    private Sex sex;
+    public Sex mSex
+    {
+        get => sex;
+        set => sex = value;
+    }
+
+    private Body body;
+    public Body mBody
+    {
+        get => body;
+        set => body = value;
+    }
+
+    private Head head;
+    public Head mHead
+    {
+        get => head;
+        set => head = value;
+    }
+
+    private Limb frontLimb, backLimb;
+    public Limb FrontLimb
+    {
+        get => frontLimb;
+        set => frontLimb = value;
+    }
+
+    public Limb BackLimb
+    {
+        get => backLimb;
+        set => backLimb = value;
+    }
+
     // Motion speed of the creature
     private float speed;
     public float Speed
@@ -13,16 +54,16 @@ public class Creature : MonoBehaviour
     }
 
     // Hunger level of a creature
-    private int hunger;
-    public int Hunger
+    private float hunger;
+    public float Hunger
     {
         get => hunger;
         set => hunger = value;
     }
 
     // Reproductive need level of a creature
-    private int reproductiveNeed;
-    public int ReproductiveNeed
+    private float reproductiveNeed;
+    public float ReproductiveNeed
     {
         get => reproductiveNeed;
         set => reproductiveNeed = value;
@@ -44,7 +85,12 @@ public class Creature : MonoBehaviour
         set => visionRadius = value;
     }
 
-    public Creature() { }
+    public Creature() {
+        this.body = new Body();
+        this.head = new Head();
+        this.frontLimb = new Limb();
+        this.backLimb = new Limb();
+    }
 
     // Returns the creatures in the field of view of the creature
     public List<GameObject> GetPercepts(GameObject myself, GameObject[] gameObjects)
@@ -61,4 +107,22 @@ public class Creature : MonoBehaviour
 ;        }
         return percepts;
     }
+
+    // Returns possible reproduction partners
+    public List<GameObject> GetPossiblePartners(GameObject me)
+    {
+        List<GameObject> possiblePartners = new List<GameObject>();
+        List<GameObject> percepts = GetPercepts(me, GameObject.FindGameObjectsWithTag(me.tag));
+        foreach (GameObject percept in percepts)
+        {
+            if (percept == this)
+            {
+                percepts.Remove(percept);
+            }
+        }
+
+
+        return possiblePartners;
+    }
+
 }
