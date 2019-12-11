@@ -11,6 +11,7 @@ public class HerbivoreBrain : Creature
     public Fuir fuir;
     public Dead dead;
     public Material deadMaterial;
+    public Task currentTask;
 
     private void Start()
     {
@@ -42,10 +43,10 @@ public class HerbivoreBrain : Creature
 
     private void Update()
     {
+        currentTask = CurrentState;
         //// Choosing the state //////
         ///  Movements are implemented in the current task's exec function
 
-        // TODO: Check Hunger <= 0
         if (CurrentState != dead)
         {
             if (this.Hunger <= 0 || this.ReproductiveNeed <= 0)

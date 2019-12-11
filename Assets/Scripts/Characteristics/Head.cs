@@ -34,9 +34,6 @@ public class Head : Characteristic
     {
         active = Active.Cornes;
         passive = Passive.Dents_base;
-
-       //active = GetRandomCharacteristic<Head.Active>();
-       //passive = GetRandomCharacteristic<Head.Passive>();
     }
 
     public Head(int level) : base(level)

@@ -27,6 +27,7 @@ public class Chasser : Task
             if (minDist <= 1.0f)
             {
                 agent.GetComponent<CarnivoreBrain>().Hunger += 1.0f;
+
                 if (closestFood.GetComponent<HerbivoreBrain>().CurrentState != closestFood.GetComponent<HerbivoreBrain>().dead)
                 {
                     closestFood.GetComponent<HerbivoreBrain>().CurrentState = closestFood.GetComponent<HerbivoreBrain>().dead;
@@ -35,8 +36,11 @@ public class Chasser : Task
             else
             {
                 agent.transform.position = Vector3.MoveTowards(agent.transform.position, closestFood.transform.position,
-                    agent.GetComponent<HerbivoreBrain>().Speed * Time.deltaTime);
+                    agent.GetComponent<CarnivoreBrain>().Speed * Time.deltaTime);
             }
+        } else
+        {
+
         }
     }
 }

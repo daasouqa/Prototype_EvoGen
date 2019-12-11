@@ -30,7 +30,6 @@ public class SeReproduire : Task
 
             if (agent.GetComponent<HerbivoreBrain>() != null)
             {
-                //possiblePartners = me.GetPossiblePartners(agent);
                 possiblePartners = me.GetPercepts(agent, GameObject.FindGameObjectsWithTag("herbivore"));
                 for (int i = 0; i < possiblePartners.Count; i++)
                 {
@@ -43,6 +42,13 @@ public class SeReproduire : Task
             else
             {
                 possiblePartners = me.GetPercepts(agent, GameObject.FindGameObjectsWithTag("carnivore"));
+                for (int i = 0; i < possiblePartners.Count; i++)
+                {
+                    if (possiblePartners[i] == agent)
+                    {
+                        possiblePartners.RemoveAt(i);
+                    }
+                }
             }
 
             if (possiblePartners.Count != 0)
@@ -108,7 +114,7 @@ public class SeReproduire : Task
             } else
             {
                 agent.transform.position = Vector3.MoveTowards(agent.transform.position, partner.transform.position,
-                    agent.GetComponent<HerbivoreBrain>().Speed * Time.deltaTime);
+                    agent.GetComponent<Creature>().Speed * Time.deltaTime);
             }
         }
     }
