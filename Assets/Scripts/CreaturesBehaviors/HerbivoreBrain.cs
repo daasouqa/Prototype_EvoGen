@@ -37,7 +37,7 @@ public class HerbivoreBrain : Creature
         this.gameObject.transform.Rotate(this.gameObject.transform.up * Random.Range(0, 360));
 
         // Defining the initial state of the creature
-        this.CurrentState = seBalader;
+        this.CurrentState = seReproduire;
     }
 
 

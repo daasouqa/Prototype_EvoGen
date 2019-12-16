@@ -36,7 +36,7 @@ public class SeNourir : Task
                 }
             }
 
-            if (minDist <= 1.0f)
+            if (minDist <= 5.0f)
             {
                 agent.GetComponent<HerbivoreBrain>().Hunger += 1.0f;
             } else

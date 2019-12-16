@@ -4,6 +4,21 @@ using System.Collections.Generic;
 
 public class Creature : MonoBehaviour
 {
+
+    private float maxHealth;
+    public float MaxHealth
+    {
+        get => maxHealth;
+        set => maxHealth = value;
+    }
+
+    private float currentHealth;
+    public float CurrentHealth
+    {
+        get => currentHealth;
+        set => currentHealth = value;
+    }
+
     // Characteristics
     public enum Sex
     {
@@ -85,11 +100,21 @@ public class Creature : MonoBehaviour
         set => visionRadius = value;
     }
 
+    private void Start()
+    {
+        this.body = new Body();
+        this.head = new Head();
+        this.frontLimb = new Limb();
+        this.backLimb = new Limb();
+        this.mSex = Random.Range(1, 2) == 1 ? Sex.FEMALE : Sex.MALE;
+    }
+
     public Creature() {
         this.body = new Body();
         this.head = new Head();
         this.frontLimb = new Limb();
         this.backLimb = new Limb();
+        this.mSex = new Sex();
     }
 
     // Returns the creatures in the field of view of the creature

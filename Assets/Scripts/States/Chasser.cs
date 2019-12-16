@@ -9,6 +9,8 @@ public class Chasser : Task
     override public void exec(GameObject agent)
     {
         GameObject[] food = GameObject.FindGameObjectsWithTag("herbivore");
+        GameObject[] corpses = GameObject.FindGameObjectsWithTag("carnivore");
+
 
         if (food.Length != 0)
         {
@@ -24,6 +26,18 @@ public class Chasser : Task
                 }
             }
 
+            if (corpses.Length != 0)
+            {
+                for (int i = 1; i < corpses.Length; i++)
+                {
+                    if (Vector3.Distance(agent.transform.position, corpses[i].transform.position) < minDist)
+                    {
+                        minDist = Vector3.Distance(agent.transform.position, corpses[i].transform.position);
+                        closestFood = corpses[i];
+                    }
+                }
+            }
+
             if (minDist <= 1.0f)
             {
                 agent.GetComponent<CarnivoreBrain>().Hunger += 1.0f;
@@ -32,6 +46,8 @@ public class Chasser : Task
                 {
                     closestFood.GetComponent<HerbivoreBrain>().CurrentState = closestFood.GetComponent<HerbivoreBrain>().dead;
                 }
+
+                Destroy(closestFood);
             }
             else
             {

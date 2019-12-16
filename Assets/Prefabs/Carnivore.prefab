@@ -30,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7258259582491706491}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.61, y: 0.546, z: -0.492}
+  m_LocalPosition: {x: -1000, y: 992, z: -0.492}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 0}
@@ -104,13 +104,13 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7258259582491706491}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 100
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!65 &7258259582491706488
 BoxCollider:
@@ -137,3 +137,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72081b49656d4324db9c7713b52f3b48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  seBalader: {fileID: 0}
+  chasser: {fileID: 0}
+  seReproduire: {fileID: 0}
+  dead: {fileID: 0}
+  deadMaterial: {fileID: 2100000, guid: f9eb7f6c3fcca0c4db47c0cb712ecf54, type: 2}
+  currentTask: {fileID: 0}

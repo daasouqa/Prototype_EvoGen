@@ -34,7 +34,7 @@ public class Game : MonoBehaviour
         {
             newBorn = new HerbivoreBrain();
             newBornGameObject = HerbivorePrefab;
-            
+                        
         } else
         {
             newBorn = new CarnivoreBrain();
@@ -43,7 +43,7 @@ public class Game : MonoBehaviour
 
         // Sex
         int rand = Random.Range(1, 2);
-        newBornGameObject.GetComponent<Creature>().mSex = rand == 1 ? Creature.Sex.FEMALE : Creature.Sex.MALE;
+        //newBornGameObject.GetComponent<Creature>().mSex = rand == 1 ? Creature.Sex.FEMALE : Creature.Sex.MALE;
 
         // Body type
         rand = Random.Range(1, 2);
