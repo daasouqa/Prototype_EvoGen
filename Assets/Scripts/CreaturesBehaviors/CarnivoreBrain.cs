@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CarnivoreBrain : Creature
 {
@@ -14,10 +15,15 @@ public class CarnivoreBrain : Creature
     public Material deadMaterial;
     public Task currentTask;
 
+    public Image bar;
     
 
     void Start()
     {
+        this.MaxHealth = 100f;
+
+        Debug.Log("Max Health  = " + MaxHealth);
+
         // Initializing the possible states for the creature
         this.seBalader = this.gameObject.AddComponent<SeBalader>();
         seBalader.name = "Se Balader";
@@ -35,6 +41,7 @@ public class CarnivoreBrain : Creature
         this.Hunger = Random.Range(Game.minHunger, 100);
         this.ReproductiveNeed = Random.Range(Game.minReproductionNeed, 100);
         this.Speed = Random.Range(1, 10);
+        this.CurrentHealth = Random.Range(MaxHealth / 2, MaxHealth);
 
         // Initializing the initial rotation of the creature
         this.gameObject.transform.Rotate(this.gameObject.transform.up * Random.Range(0, 360));
@@ -51,41 +58,48 @@ public class CarnivoreBrain : Creature
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("Current Health = " + CurrentHealth);
+        bar.fillAmount = CurrentHealth / MaxHealth;
         currentTask = CurrentState;
         if (CurrentState != dead)
         {
-            if (this.Hunger <= 0 || this.ReproductiveNeed <= 0)
+            if (this.CurrentHealth <= 0)
             {
                 CurrentState = dead;
-            }
-            else
+            } else
             {
-                if (this.CurrentState == chasser)
+                if (this.Hunger <= 0 || this.ReproductiveNeed <= 0)
                 {
-                    if (this.Hunger >= 99)
-                    {
-                        this.Hunger = 100;
-                        CurrentState = seBalader;
-                    }
-                }
-                else if (this.Hunger < Game.minHunger)
-                {
-                    CurrentState = chasser;
-
+                    CurrentHealth -= 0.1f;
                 }
                 else
                 {
-                    if (this.ReproductiveNeed < Game.minReproductionNeed)
+                    if (this.CurrentState == chasser)
                     {
-                        CurrentState = seReproduire;
+                        if (this.Hunger >= 99)
+                        {
+                            this.Hunger = 100;
+                            CurrentState = seBalader;
+                        }
+                    }
+                    else if (this.Hunger < Game.minHunger)
+                    {
+                        CurrentState = chasser;
+
                     }
                     else
                     {
-                        CurrentState = seBalader;
+                        if (this.ReproductiveNeed < Game.minReproductionNeed)
+                        {
+                            CurrentState = seReproduire;
+                        }
+                        else
+                        {
+                            CurrentState = seBalader;
+                        }
                     }
                 }
             }
-
         }
 
         this.Hunger -= 0.01f;

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : Creature
 {
@@ -47,5 +48,10 @@ public class Player : Creature
     {
         this.CurrentHealth--;
         if (this.CurrentHealth < 0) Die();
+    }
+
+    private void Update()
+    {
+        
     }
 }

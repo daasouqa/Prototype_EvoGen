@@ -107,6 +107,8 @@ public class Creature : MonoBehaviour
         this.frontLimb = new Limb();
         this.backLimb = new Limb();
         this.mSex = Random.Range(1, 2) == 1 ? Sex.FEMALE : Sex.MALE;
+
+        
     }
 
     public Creature() {

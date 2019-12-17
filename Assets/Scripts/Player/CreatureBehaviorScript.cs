@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CreatureBehaviorScript : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class CreatureBehaviorScript : MonoBehaviour
     [SerializeField] public float initialHealth = 1000;
     bool hasDescendant;
     Player creature;
+    public Image bar;
 
     private int nextUpdate = 1;
 
@@ -29,6 +31,8 @@ public class CreatureBehaviorScript : MonoBehaviour
             creature.GrowOlder();
             nextUpdate = Mathf.FloorToInt(Time.time) + 1;
         }
+
+        bar.fillAmount = this.creature.CurrentHealth / this.creature.MaxHealth;
     }
 
     private void Move()

@@ -2,6 +2,7 @@
 using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class HerbivoreBrain : Creature
 {
@@ -12,10 +13,12 @@ public class HerbivoreBrain : Creature
     public Dead dead;
     public Material deadMaterial;
     public Task currentTask;
+    public Image bar;
 
     private void Start()
     {
-        
+        this.MaxHealth = 100f;
+
         // Initializing the possible states for the creature
         this.seReproduire = this.gameObject.AddComponent<SeReproduire>();
         seReproduire.name = "Se Reproduire";
@@ -32,6 +35,7 @@ public class HerbivoreBrain : Creature
         this.Hunger = Random.Range(Game.minHunger, 100);
         this.ReproductiveNeed = Random.Range(Game.minReproductionNeed, 100);
         this.Speed = Random.Range(1, 10);
+        this.CurrentHealth = Random.Range(MaxHealth / 2, MaxHealth);
 
         // Initializing the initial rotation of the creature
         this.gameObject.transform.Rotate(this.gameObject.transform.up * Random.Range(0, 360));
@@ -43,48 +47,58 @@ public class HerbivoreBrain : Creature
 
     private void Update()
     {
+        bar.fillAmount = CurrentHealth / MaxHealth;
         currentTask = CurrentState;
         //// Choosing the state //////
         ///  Movements are implemented in the current task's exec function
 
         if (CurrentState != dead)
         {
-            if (this.Hunger <= 0 || this.ReproductiveNeed <= 0)
+            if (this.CurrentHealth <= 0)
             {
                 CurrentState = dead;
             } else
             {
-                List<GameObject> predators = GetPercepts(this.gameObject, GameObject.FindGameObjectsWithTag("carnivore"));
-                if (predators.Count != 0)
+                if (this.Hunger <= 0 || this.ReproductiveNeed <= 0)
                 {
-                    CurrentState = fuir;
+                    CurrentHealth -= 0.1f;
                 }
                 else
                 {
-                    if(this.CurrentState == seNourir)
+                    List<GameObject> predators = GetPercepts(this.gameObject, GameObject.FindGameObjectsWithTag("carnivore"));
+                    if (predators.Count != 0)
                     {
-                        if (this.Hunger >= 99)
-                        {
-                            this.Hunger = 100;
-                            CurrentState = seBalader;
-                        }
-                    }else if (this.Hunger < Game.minHunger)
-                    {
-                        CurrentState = seNourir;
+                        CurrentState = fuir;
                     }
                     else
                     {
-                        if (this.ReproductiveNeed < Game.minReproductionNeed)
+                        if (this.CurrentState == seNourir)
                         {
-                           CurrentState = seReproduire;
+                            if (this.Hunger >= 99)
+                            {
+                                this.Hunger = 100;
+                                CurrentState = seBalader;
+                            }
+                        }
+                        else if (this.Hunger < Game.minHunger)
+                        {
+                            CurrentState = seNourir;
                         }
                         else
                         {
-                            CurrentState = seBalader;
+                            if (this.ReproductiveNeed < Game.minReproductionNeed)
+                            {
+                                CurrentState = seReproduire;
+                            }
+                            else
+                            {
+                                CurrentState = seBalader;
+                            }
                         }
                     }
                 }
             }
+            
             
         }
 
