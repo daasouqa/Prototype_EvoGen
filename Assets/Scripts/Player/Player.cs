@@ -5,10 +5,49 @@ using UnityEngine.UI;
 
 public class Player : Creature
 {
+    public Player(CreatureType type)
+    {
+        this.mHead = new Head();
+        this.mBody = new Body();
+        this.FrontLimb = new Limb();
+        this.BackLimb = new Limb();
+
+        if (type == CreatureType.HERBIVORE)
+        {
+            this.mHead.mActive = Head.Active.Cornes;
+            this.mHead.mPassive = Head.Passive.Dents_base;
+            
+            this.mBody.mBodyType = Body.BodyType.peau_base;
+            
+            this.FrontLimb.mActive = Limb.Active.Pattes_saut;
+            this.FrontLimb.mPassive = Limb.Passive.Pattes_base;
+            
+            this.BackLimb.mActive = Limb.Active.Pattes_saut;
+            this.BackLimb.mPassive = Limb.Passive.Pattes_base;
+        } else
+        {
+            this.mHead.mActive = Head.Active.crocs;
+            this.mHead.mPassive = Head.Passive.Dents_base;
+
+            this.mBody.mBodyType = Body.BodyType.peau_base;
+
+            this.FrontLimb.mActive = Limb.Active.Pattes_saut;
+            this.FrontLimb.mPassive = Limb.Passive.Pattes_base;
+
+            this.BackLimb.mActive = Limb.Active.Pattes_saut;
+            this.BackLimb.mPassive = Limb.Passive.Pattes_base;
+        }
+
+        this.MaxHealth = 100;
+        this.CurrentHealth = 100;
+    }
+
     public Player(float initialHealth)
     {
         MaxHealth = initialHealth;
         CurrentHealth = initialHealth;
+        Hunger = 100;
+        ReproductiveNeed = 100;
     }
 
     public Player(Head h, Body b, Limb lf, Limb lb, float initialHealth)

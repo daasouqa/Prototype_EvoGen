@@ -16,11 +16,13 @@ public class CarnivoreBrain : Creature
     public Task currentTask;
 
     public Image bar;
-    
+    public GameObject characteristics;
+
 
     void Start()
     {
         this.MaxHealth = 100f;
+        this.CharacteristicsCanvas = characteristics;
 
         Debug.Log("Max Health  = " + MaxHealth);
 
@@ -42,6 +44,7 @@ public class CarnivoreBrain : Creature
         this.ReproductiveNeed = Random.Range(Game.minReproductionNeed, 100);
         this.Speed = Random.Range(1, 10);
         this.CurrentHealth = Random.Range(MaxHealth / 2, MaxHealth);
+        this.mCreatureType = CreatureType.CARNIVORE;
 
         // Initializing the initial rotation of the creature
         this.gameObject.transform.Rotate(this.gameObject.transform.up * Random.Range(0, 360));

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class Game : MonoBehaviour
 {
-    //TODO: Make variables static after test
     public static int minHunger = 20;
     public static int minReproductionNeed = 20;
     public static float visionRadius = 15.0f;
@@ -17,12 +16,26 @@ public class Game : MonoBehaviour
 
     public static GameObject Me;
 
+    public static Creature.CreatureType playerType;
+
+    public static bool isPaused;
+    
+
     private void Start()
     {
         CarnivorePrefab = CarnivorePrefabPublic;
         HerbivorePrefab = HerbivorePrefabPublic;
         Me = this.gameObject;
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            isPaused = !isPaused;
+        }
+    }
+
 
     public static void CreateChild(GameObject mama, GameObject papa)
     {
@@ -76,6 +89,7 @@ public class Game : MonoBehaviour
         Instantiate(newBornGameObject, mama.transform.position, Quaternion.identity);
     }
  
+    
     /*public static void CreateCreature()
     {
         //if (mama.GetComponent<HerbivoreBrain>() != null)

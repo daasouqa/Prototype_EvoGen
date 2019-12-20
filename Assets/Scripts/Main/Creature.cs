@@ -4,6 +4,25 @@ using System.Collections.Generic;
 
 public class Creature : MonoBehaviour
 {
+    public enum CreatureType
+    {
+        HERBIVORE,
+        CARNIVORE
+    }
+
+    private CreatureType creatureType;
+    public CreatureType mCreatureType
+    {
+        get => creatureType;
+        set => creatureType = value;
+    }
+
+    private GameObject characteristicsCanvas;
+    public GameObject CharacteristicsCanvas
+    {
+        get => characteristicsCanvas;
+        set => characteristicsCanvas = value;
+    }
 
     private float maxHealth;
     public float MaxHealth
@@ -102,13 +121,19 @@ public class Creature : MonoBehaviour
 
     private void Start()
     {
+        this.MaxHealth = 100f;
+
+        // Initializing different parameters of the creature
+        this.Hunger = Random.Range(Game.minHunger, 100);
+        this.ReproductiveNeed = Random.Range(Game.minReproductionNeed, 100);
+        this.Speed = Random.Range(1, 10);
+        this.CurrentHealth = Random.Range(MaxHealth / 2, MaxHealth);
+
         this.body = new Body();
         this.head = new Head();
         this.frontLimb = new Limb();
         this.backLimb = new Limb();
         this.mSex = Random.Range(1, 2) == 1 ? Sex.FEMALE : Sex.MALE;
-
-        
     }
 
     public Creature() {
@@ -150,6 +175,12 @@ public class Creature : MonoBehaviour
 
 
         return possiblePartners;
+    }
+
+
+    private void OnMouseDown()
+    {
+        characteristicsCanvas.SetActive(!characteristicsCanvas.activeSelf);
     }
 
 }

@@ -14,10 +14,12 @@ public class HerbivoreBrain : Creature
     public Material deadMaterial;
     public Task currentTask;
     public Image bar;
+    public GameObject characteristics;
 
     private void Start()
     {
         this.MaxHealth = 100f;
+        this.CharacteristicsCanvas = characteristics;
 
         // Initializing the possible states for the creature
         this.seReproduire = this.gameObject.AddComponent<SeReproduire>();
@@ -32,16 +34,20 @@ public class HerbivoreBrain : Creature
         dead.name = "Dead";
 
         // Initializing different parameters of the creature
+
         this.Hunger = Random.Range(Game.minHunger, 100);
         this.ReproductiveNeed = Random.Range(Game.minReproductionNeed, 100);
         this.Speed = Random.Range(1, 10);
         this.CurrentHealth = Random.Range(MaxHealth / 2, MaxHealth);
+        this.mCreatureType = CreatureType.HERBIVORE;
 
         // Initializing the initial rotation of the creature
         this.gameObject.transform.Rotate(this.gameObject.transform.up * Random.Range(0, 360));
 
         // Defining the initial state of the creature
-        this.CurrentState = seReproduire;
+        this.CurrentState = seBalader;
+
+        Debug.Log("Hunger au debut:" + this.Hunger);
     }
 
 
@@ -104,8 +110,8 @@ public class HerbivoreBrain : Creature
 
         // Decrementing the creature's parameters every turn
 
-        this.Hunger -= 0.01f;
-        this.ReproductiveNeed -= 0.01f;
+        //this.Hunger -= 0.01f;
+        //this.ReproductiveNeed -= 0.01f;
 
         // Update must end with this line:
         Debug.Log("Current State = " + CurrentState.name);

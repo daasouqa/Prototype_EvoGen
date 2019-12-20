@@ -8,6 +8,9 @@ TextureImporter:
   - first:
       213: -2248722404526499543
     second: bar_empty
+  - first:
+      213: 1759478512118393505
+    second: healthBars_0
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -141,6 +144,27 @@ TextureImporter:
       bones: []
       spriteID: 22a78147c6644884f858e181e8e65797
       internalID: -2248722404526499543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: healthBars_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 346
+        width: 512
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2831078d82ae1e9448e768ba0e7d28d0
+      internalID: 1759478512118393505
       vertices: []
       indices: 
       edges: []
