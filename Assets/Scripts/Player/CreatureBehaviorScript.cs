@@ -23,6 +23,9 @@ public class CreatureBehaviorScript : MonoBehaviour
     public GameObject FrontLimbText;
     public GameObject BackLimbText;
 
+    public GameObject EatInteractionCanvas;
+    public GameObject ReproductInteractionCanvas;
+
     private int nextUpdate = 1;
 
     // Start is called before the first frame update
@@ -95,7 +98,57 @@ public class CreatureBehaviorScript : MonoBehaviour
             reproductionBar.fillAmount = this.creature.ReproductiveNeed / 100f;
         }
 
-        
+        List<GameObject> creaturesNearby = creature.GetPossiblePartnersInSight(gameObject);
+        List<GameObject> foodNearby = creature.GetFoodNearby(gameObject, GameObject.FindObjectsOfType<GameObject>());
+
+
+        if (creaturesNearby.Count != 0)
+        {
+            float minDistCreature = Vector3.Distance(gameObject.transform.position, creaturesNearby[0].transform.position);
+            GameObject closestCreature = creaturesNearby[0];
+
+            foreach (GameObject go in creaturesNearby)
+            {
+                if (go.GetComponent<Creature>().mCreatureType == creature.mCreatureType 
+                    && Vector3.Distance(gameObject.transform.position, go.transform.position) < minDistCreature)
+                {
+                    minDistCreature = Vector3.Distance(gameObject.transform.position, go.transform.position);
+                    closestCreature = go;
+                }
+            }
+
+            if (minDistCreature <= 3.0f && closestCreature.GetComponent<Creature>().mCreatureType == creature.mCreatureType)
+            {
+                ReproductInteractionCanvas.SetActive(true);
+            } else
+            {
+                ReproductInteractionCanvas.SetActive(false);
+            }
+        }
+
+        if (foodNearby.Count != 0)
+        {
+            float minDistFood = Vector3.Distance(gameObject.transform.position, foodNearby[0].transform.position);
+            GameObject closestFood = foodNearby[0];
+
+            foreach (GameObject go in foodNearby)
+            {
+                if (Vector3.Distance(gameObject.transform.position, go.transform.position) < minDistFood)
+                {
+                    minDistFood = Vector3.Distance(gameObject.transform.position, go.transform.position);
+                    closestFood = go;
+                }
+            }
+
+            if (minDistFood <= 3.0f)
+            {
+                EatInteractionCanvas.SetActive(true);
+            }
+            else
+            {
+                EatInteractionCanvas.SetActive(false);
+            }
+        }
 
         
 

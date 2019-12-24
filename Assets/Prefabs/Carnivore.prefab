@@ -501,7 +501,7 @@ GameObject:
   - component: {fileID: 7258259582491706370}
   m_Layer: 0
   m_Name: Carnivore
-  m_TagString: carnivore
+  m_TagString: creature
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -11,7 +11,7 @@ public class Fuir : Task
 
     public override void exec(GameObject agent)
     {
-        List<GameObject> enemiesNearby = new Creature().GetPercepts(agent ,GameObject.FindGameObjectsWithTag("carnivore"));
+        List<GameObject> enemiesNearby = new Creature().GetDifferentTypePercepts(agent ,GameObject.FindGameObjectsWithTag("creature"));
         if (enemiesNearby.Count != 0)
         {
             float minDistance = Vector3.Distance(agent.transform.position, enemiesNearby[0].transform.position);

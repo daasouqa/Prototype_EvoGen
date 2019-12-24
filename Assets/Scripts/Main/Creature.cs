@@ -144,35 +144,141 @@ public class Creature : MonoBehaviour
         this.mSex = new Sex();
     }
 
+    public List<GameObject> GetDifferentTypePercepts(GameObject myself, GameObject[] gameObjects)
+    {
+        
+        List<GameObject> percepts = new List<GameObject>();
+        foreach (GameObject go in gameObjects)
+        {
+            
+            if (go.GetComponent<CreatureBehaviorScript>() != null)
+            {
+                if (go.GetComponent<CreatureBehaviorScript>().creature.mCreatureType != myself.GetComponent<Creature>().mCreatureType)
+                {
+                    percepts.Add(go);
+                }
+            } else
+            {
+                if (go.GetComponent<Creature>().creatureType != myself.GetComponent<Creature>().mCreatureType)
+                {
+                    if (Vector3.Distance(myself.gameObject.transform.position, go.transform.position) < Game.visionRadius)
+                    {
+                        if (myself != go)
+                        {
+                            percepts.Add(go);
+                        }
+                    }
+                }
+            }
+        }
+
+        return percepts;
+    }
+
+    public List<GameObject> GetFoodNearby(GameObject myself, GameObject[] gameObjects)
+    {
+        List<GameObject> foodNearby = new List<GameObject>();
+        GameObject[] foodInScene;
+        if (myself.GetComponent<CreatureBehaviorScript>().creature.mCreatureType == CreatureType.CARNIVORE)
+        {
+            foodInScene = GameObject.FindGameObjectsWithTag("creature");
+            foreach (GameObject go in foodInScene)
+            {
+                if (go != myself)
+                {
+                    if (Vector3.Distance(myself.gameObject.transform.position, go.transform.position) < Game.visionRadius 
+                        && go.GetComponent<Creature>().mCreatureType == CreatureType.HERBIVORE)
+                    {
+                        foodNearby.Add(go);
+                    }
+                }
+            }
+
+            return foodNearby;
+        } else
+        {
+            foodInScene = GameObject.FindGameObjectsWithTag("herbe");
+            foreach (GameObject go in foodInScene)
+            {
+                if (Vector3.Distance(myself.gameObject.transform.position, go.transform.position) < Game.visionRadius)
+                {
+                    if (myself != go)
+                    {
+                        foodNearby.Add(go);
+                    }
+                }
+            }
+            return foodNearby;
+        }
+    }
+
+    public List<GameObject> GetSameTypePercepts(GameObject myself, GameObject[] gameObjects)
+    {
+        List<GameObject> percepts = new List<GameObject>();
+        foreach (GameObject go in gameObjects)
+        {
+            if (go.GetComponent<CreatureBehaviorScript>() != null)
+            {
+                if (go.GetComponent<CreatureBehaviorScript>().creature.mCreatureType == myself.GetComponent<Creature>().mCreatureType)
+                {
+                    percepts.Add(go);
+                }
+            }
+            else
+            {
+                if (go.GetComponent<Creature>().creatureType == myself.GetComponent<Creature>().mCreatureType)
+                {
+                    if (Vector3.Distance(myself.gameObject.transform.position, go.transform.position) < Game.visionRadius)
+                    {
+                        if (myself != go)
+                        {
+                            percepts.Add(go);
+                        }
+                    }
+                }
+            }
+        }
+
+        return percepts;
+    }
+
     // Returns the creatures in the field of view of the creature
     public List<GameObject> GetPercepts(GameObject myself, GameObject[] gameObjects)
     {
         List<GameObject> percepts = new List<GameObject>();
         foreach (GameObject go in gameObjects)
         {
-
             //if distance is short enough for the percept to be seen then add to percepts
             if (Vector3.Distance(myself.gameObject.transform.position, go.transform.position) < Game.visionRadius)
             {
-                percepts.Add(go);
+                if (myself != go)
+                {
+                    percepts.Add(go);
+                }
             }
 ;        }
         return percepts;
     }
 
     // Returns possible reproduction partners
-    public List<GameObject> GetPossiblePartners(GameObject me)
+    public List<GameObject> GetPossiblePartnersInSight(GameObject me)
     {
         List<GameObject> possiblePartners = new List<GameObject>();
-        List<GameObject> percepts = GetPercepts(me, GameObject.FindGameObjectsWithTag(me.tag));
-        foreach (GameObject percept in percepts)
+        GameObject[] creatures = GameObject.FindGameObjectsWithTag("creature"); 
+
+        foreach (GameObject go in creatures)
         {
-            if (percept == this)
+            if (go != me)
             {
-                percepts.Remove(percept);
+                if (go.GetComponent<Creature>().mCreatureType == me.GetComponent<CreatureBehaviorScript>().creature.mCreatureType)
+                {
+                    if (Vector3.Distance(go.transform.position, me.transform.position) <= Game.visionRadius)
+                    {
+                        possiblePartners.Add(go);
+                    }
+                }
             }
         }
-
 
         return possiblePartners;
     }

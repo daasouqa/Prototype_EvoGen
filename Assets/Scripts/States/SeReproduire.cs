@@ -24,32 +24,34 @@ public class SeReproduire : Task
 
         if (partner == null) // Don't have any partner
         {
-            Debug.Log(partner);
+            //Debug.Log(partner);
             // Find possible partners in sight
             List<GameObject> possiblePartners;
 
-            if (agent.GetComponent<HerbivoreBrain>() != null)
-            {
-                possiblePartners = me.GetPercepts(agent, GameObject.FindGameObjectsWithTag("herbivore"));
-                for (int i = 0; i < possiblePartners.Count; i++)
-                {
-                    if (possiblePartners[i] == agent)
-                    {
-                        possiblePartners.RemoveAt(i);
-                    }
-                }
-            }
-            else
-            {
-                possiblePartners = me.GetPercepts(agent, GameObject.FindGameObjectsWithTag("carnivore"));
-                for (int i = 0; i < possiblePartners.Count; i++)
-                {
-                    if (possiblePartners[i] == agent)
-                    {
-                        possiblePartners.RemoveAt(i);
-                    }
-                }
-            }
+            possiblePartners = me.GetSameTypePercepts(agent, GameObject.FindGameObjectsWithTag("creature"));
+
+            //if (agent.GetComponent<HerbivoreBrain>() != null)
+            //{
+            //    possiblePartners = me.GetSameTypePercepts(agent, GameObject.FindGameObjectsWithTag("herbivore"));
+            //    for (int i = 0; i < possiblePartners.Count; i++)
+            //    {
+            //        if (possiblePartners[i] == agent)
+            //        {
+            //            possiblePartners.RemoveAt(i);
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    possiblePartners = me.GetPercepts(agent, GameObject.FindGameObjectsWithTag("carnivore"));
+            //    for (int i = 0; i < possiblePartners.Count; i++)
+            //    {
+            //        if (possiblePartners[i] == agent)
+            //        {
+            //            possiblePartners.RemoveAt(i);
+            //        }
+            //    }
+            //}
 
             if (possiblePartners.Count != 0)
             {
@@ -58,22 +60,25 @@ public class SeReproduire : Task
 
                 for (int i = 0; i < possiblePartners.Count; i++)
                 {
-                    if ((me.mSex == Creature.Sex.FEMALE && possiblePartners[i].GetComponent<Creature>().mSex == Creature.Sex.MALE) 
-                        || (me.mSex == Creature.Sex.MALE && possiblePartners[i].GetComponent<Creature>().mSex == Creature.Sex.FEMALE))
+                    if (possiblePartners[i].GetComponent<CreatureBehaviorScript>() == null)
                     {
-                        int similarities = 0;
-                        if (me.mBody.mBodyType == possiblePartners[i].GetComponent<Creature>().mBody.mBodyType) similarities++;
-                        if (me.mHead.mActive == possiblePartners[i].GetComponent<Creature>().mHead.mActive) similarities++;
-                        if (me.mHead.mPassive == possiblePartners[i].GetComponent<Creature>().mHead.mPassive) similarities++;
-                        if (me.FrontLimb.mActive == possiblePartners[i].GetComponent<Creature>().FrontLimb.mActive) similarities++;
-                        if (me.FrontLimb.mPassive == possiblePartners[i].GetComponent<Creature>().FrontLimb.mPassive) similarities++;
-                        if (me.BackLimb.mActive == possiblePartners[i].GetComponent<Creature>().BackLimb.mActive) similarities++;
-                        if (me.BackLimb.mPassive == possiblePartners[i].GetComponent<Creature>().BackLimb.mPassive) similarities++;
-
-                        if (similarities > maxSimilarities)
+                        if ((me.mSex == Creature.Sex.FEMALE && possiblePartners[i].GetComponent<Creature>().mSex == Creature.Sex.MALE)
+                        || (me.mSex == Creature.Sex.MALE && possiblePartners[i].GetComponent<Creature>().mSex == Creature.Sex.FEMALE))
                         {
-                            maxSimilarities = similarities;
-                            bestPartner = possiblePartners[i];
+                            int similarities = 0;
+                            if (me.mBody.mBodyType == possiblePartners[i].GetComponent<Creature>().mBody.mBodyType) similarities++;
+                            if (me.mHead.mActive == possiblePartners[i].GetComponent<Creature>().mHead.mActive) similarities++;
+                            if (me.mHead.mPassive == possiblePartners[i].GetComponent<Creature>().mHead.mPassive) similarities++;
+                            if (me.FrontLimb.mActive == possiblePartners[i].GetComponent<Creature>().FrontLimb.mActive) similarities++;
+                            if (me.FrontLimb.mPassive == possiblePartners[i].GetComponent<Creature>().FrontLimb.mPassive) similarities++;
+                            if (me.BackLimb.mActive == possiblePartners[i].GetComponent<Creature>().BackLimb.mActive) similarities++;
+                            if (me.BackLimb.mPassive == possiblePartners[i].GetComponent<Creature>().BackLimb.mPassive) similarities++;
+
+                            if (similarities > maxSimilarities)
+                            {
+                                maxSimilarities = similarities;
+                                bestPartner = possiblePartners[i];
+                            }
                         }
                     }
                 }

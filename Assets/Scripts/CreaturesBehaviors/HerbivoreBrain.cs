@@ -47,7 +47,7 @@ public class HerbivoreBrain : Creature
         // Defining the initial state of the creature
         this.CurrentState = seBalader;
 
-        Debug.Log("Hunger au debut:" + this.Hunger);
+        //Debug.Log("Hunger au debut:" + this.Hunger);
     }
 
 
@@ -71,7 +71,7 @@ public class HerbivoreBrain : Creature
                 }
                 else
                 {
-                    List<GameObject> predators = GetPercepts(this.gameObject, GameObject.FindGameObjectsWithTag("carnivore"));
+                    List<GameObject> predators = GetDifferentTypePercepts(this.gameObject, GameObject.FindGameObjectsWithTag("creature"));
                     if (predators.Count != 0)
                     {
                         CurrentState = fuir;

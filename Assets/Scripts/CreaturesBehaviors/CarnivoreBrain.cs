@@ -61,7 +61,7 @@ public class CarnivoreBrain : Creature
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Current Health = " + CurrentHealth);
+        //Debug.Log("Current Health = " + CurrentHealth);
         bar.fillAmount = CurrentHealth / MaxHealth;
         currentTask = CurrentState;
         if (CurrentState != dead)
