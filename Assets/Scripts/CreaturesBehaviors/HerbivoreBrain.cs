@@ -42,7 +42,7 @@ public class HerbivoreBrain : Creature
         this.mCreatureType = CreatureType.HERBIVORE;
 
         // Initializing the initial rotation of the creature
-        this.gameObject.transform.Rotate(this.gameObject.transform.up * Random.Range(0, 360));
+        //this.gameObject.transform.Rotate(this.gameObject.transform.up * Random.Range(0, 360));
 
         // Defining the initial state of the creature
         this.CurrentState = seBalader;
@@ -110,8 +110,8 @@ public class HerbivoreBrain : Creature
 
         // Decrementing the creature's parameters every turn
 
-        //this.Hunger -= 0.01f;
-        //this.ReproductiveNeed -= 0.01f;
+        this.Hunger -= Game.HungerDecrementationPerUpdate;
+        this.ReproductiveNeed -= Game.ReproductiveNeedDecrementationPerUpdate;
 
         // Update must end with this line:
         Debug.Log("Current State = " + CurrentState.name);

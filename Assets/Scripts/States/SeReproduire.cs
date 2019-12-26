@@ -30,29 +30,6 @@ public class SeReproduire : Task
 
             possiblePartners = me.GetSameTypePercepts(agent, GameObject.FindGameObjectsWithTag("creature"));
 
-            //if (agent.GetComponent<HerbivoreBrain>() != null)
-            //{
-            //    possiblePartners = me.GetSameTypePercepts(agent, GameObject.FindGameObjectsWithTag("herbivore"));
-            //    for (int i = 0; i < possiblePartners.Count; i++)
-            //    {
-            //        if (possiblePartners[i] == agent)
-            //        {
-            //            possiblePartners.RemoveAt(i);
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    possiblePartners = me.GetPercepts(agent, GameObject.FindGameObjectsWithTag("carnivore"));
-            //    for (int i = 0; i < possiblePartners.Count; i++)
-            //    {
-            //        if (possiblePartners[i] == agent)
-            //        {
-            //            possiblePartners.RemoveAt(i);
-            //        }
-            //    }
-            //}
-
             if (possiblePartners.Count != 0)
             {
                 int maxSimilarities = 0;
@@ -64,7 +41,7 @@ public class SeReproduire : Task
                     {
                         if ((me.mSex == Creature.Sex.FEMALE && possiblePartners[i].GetComponent<Creature>().mSex == Creature.Sex.MALE)
                         || (me.mSex == Creature.Sex.MALE && possiblePartners[i].GetComponent<Creature>().mSex == Creature.Sex.FEMALE))
-                        {
+                        { 
                             int similarities = 0;
                             if (me.mBody.mBodyType == possiblePartners[i].GetComponent<Creature>().mBody.mBodyType) similarities++;
                             if (me.mHead.mActive == possiblePartners[i].GetComponent<Creature>().mHead.mActive) similarities++;
@@ -95,16 +72,19 @@ public class SeReproduire : Task
 
                 if (isRotatingRight)
                 {
+                    agent.GetComponent<Animation>().Play("walk");
                     agent.transform.Rotate(agent.transform.up * Time.deltaTime * rotSpeed);
                 }
 
                 if (isRotatingLeft)
                 {
+                    agent.GetComponent<Animation>().Play("walk");
                     agent.transform.Rotate(agent.transform.up * Time.deltaTime * -rotSpeed);
                 }
 
                 if (isWalking)
                 {
+                    agent.GetComponent<Animation>().Play("run");
                     agent.transform.position += agent.transform.forward * agent.GetComponent<Creature>().Speed * Time.deltaTime;
                 }
             }
@@ -112,12 +92,12 @@ public class SeReproduire : Task
         {
             if (Vector3.Distance(agent.transform.position, partner.transform.position) <= 1.0f)
             {
-                Debug.Log(partner);
                 agent.GetComponent<Creature>().ReproductiveNeed = 100f;
                 Game.CreateChild(agent, partner);
                 partner = null;
             } else
             {
+                agent.GetComponent<Animation>().Play("walk");
                 agent.transform.position = Vector3.MoveTowards(agent.transform.position, partner.transform.position,
                     agent.GetComponent<Creature>().Speed * Time.deltaTime);
             }

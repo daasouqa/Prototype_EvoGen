@@ -24,7 +24,6 @@ public class CarnivoreBrain : Creature
         this.MaxHealth = 100f;
         this.CharacteristicsCanvas = characteristics;
 
-        Debug.Log("Max Health  = " + MaxHealth);
 
         // Initializing the possible states for the creature
         this.seBalader = this.gameObject.AddComponent<SeBalader>();
@@ -47,7 +46,7 @@ public class CarnivoreBrain : Creature
         this.mCreatureType = CreatureType.CARNIVORE;
 
         // Initializing the initial rotation of the creature
-        this.gameObject.transform.Rotate(this.gameObject.transform.up * Random.Range(0, 360));
+        //this.gameObject.transform.Rotate(this.gameObject.transform.up * Random.Range(0, 360));
 
         this.mHead.mActive = Head.Active.crocs;
         this.mHead.mPassive = Head.Passive.Dents_sec;
@@ -105,8 +104,8 @@ public class CarnivoreBrain : Creature
             }
         }
 
-        this.Hunger -= 0.01f;
-        this.ReproductiveNeed -= 0.01f;
+        this.Hunger -= Game.HungerDecrementationPerUpdate;
+        this.ReproductiveNeed -= Game.ReproductiveNeedDecrementationPerUpdate;
 
         // Movements are implemented in the current task's exec function
         Debug.Log("Current state (Carnivore):" + CurrentState.name);

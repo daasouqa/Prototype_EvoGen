@@ -34,15 +34,18 @@ public class SeBalader : Task
         if (isRotatingRight)
         {
             agent.transform.Rotate(agent.transform.up * Time.deltaTime * rotSpeed);
+            agent.GetComponent<Animation>().Play("walk");
         }
 
         if (isRotatingLeft)
         {
             agent.transform.Rotate(agent.transform.up * Time.deltaTime * - rotSpeed);
+            agent.GetComponent<Animation>().Play("walk");
         }
 
         if (isWalking)
         {
+            agent.GetComponent<Animation>().Play("run");
             if (agent.GetComponent<HerbivoreBrain>() != null)
             {
                 agent.transform.position += agent.transform.forward * agent.GetComponent<HerbivoreBrain>().Speed * Time.deltaTime;
@@ -51,6 +54,9 @@ public class SeBalader : Task
                 agent.transform.position += agent.transform.forward * agent.GetComponent<CarnivoreBrain>().Speed * Time.deltaTime;
             }
             
+        } else
+        {
+            agent.GetComponent<Animation>().Play("idle01");
         }
     }
 

@@ -38,8 +38,8 @@ public class CreatureBehaviorScript : MonoBehaviour
         hasDescendant = false;
 
         creature.MaxHealth = 100f;
-        creature.Hunger = 100f;
-        creature.ReproductiveNeed = 100f;
+        creature.Hunger = 70.0f;
+        creature.ReproductiveNeed = 70.0f;
 
         if (Game.playerType == Creature.CreatureType.HERBIVORE)
         {
@@ -101,11 +101,14 @@ public class CreatureBehaviorScript : MonoBehaviour
         List<GameObject> creaturesNearby = creature.GetPossiblePartnersInSight(gameObject);
         List<GameObject> foodNearby = creature.GetFoodNearby(gameObject, GameObject.FindObjectsOfType<GameObject>());
 
+        GameObject closestCreature = null; 
+        GameObject closestFood = null; 
+
 
         if (creaturesNearby.Count != 0)
         {
             float minDistCreature = Vector3.Distance(gameObject.transform.position, creaturesNearby[0].transform.position);
-            GameObject closestCreature = creaturesNearby[0];
+            closestCreature = creaturesNearby[0];
 
             foreach (GameObject go in creaturesNearby)
             {
@@ -117,7 +120,9 @@ public class CreatureBehaviorScript : MonoBehaviour
                 }
             }
 
-            if (minDistCreature <= 3.0f && closestCreature.GetComponent<Creature>().mCreatureType == creature.mCreatureType)
+            if (minDistCreature <= 3.0f 
+                && closestCreature.GetComponent<Creature>().mCreatureType == creature.mCreatureType 
+                && creature.ReproductiveNeed <= Game.minReproductionNeed)
             {
                 ReproductInteractionCanvas.SetActive(true);
             } else
@@ -129,7 +134,7 @@ public class CreatureBehaviorScript : MonoBehaviour
         if (foodNearby.Count != 0)
         {
             float minDistFood = Vector3.Distance(gameObject.transform.position, foodNearby[0].transform.position);
-            GameObject closestFood = foodNearby[0];
+            closestFood = foodNearby[0];
 
             foreach (GameObject go in foodNearby)
             {
@@ -140,19 +145,61 @@ public class CreatureBehaviorScript : MonoBehaviour
                 }
             }
 
-            if (minDistFood <= 3.0f)
+            if (creature.mCreatureType == Creature.CreatureType.CARNIVORE)
             {
-                EatInteractionCanvas.SetActive(true);
+                if (minDistFood <= 3.0f)
+                {
+                    EatInteractionCanvas.SetActive(true);
+                }
+                else
+                {
+                    EatInteractionCanvas.SetActive(false);
+                }
+            } else
+            {
+                if (minDistFood <= 5.0f)
+                {
+                    EatInteractionCanvas.SetActive(true);
+                }
+                else
+                {
+                    EatInteractionCanvas.SetActive(false);
+                }
             }
-            else
+            
+        }
+
+        // Checking pushed buttons for interactions
+
+        if (ReproductInteractionCanvas.activeSelf)
+        {
+            if (Input.GetKeyDown(KeyCode.LeftControl)) //Reproduct
             {
-                EatInteractionCanvas.SetActive(false);
+                Debug.Log("CRAC CRAC");
+                Game.CreateChildPlayer(gameObject, closestCreature);
+                creature.ReproductiveNeed = 100f;
+            }
+        }
+        
+        if (EatInteractionCanvas.activeSelf)
+        {
+            if (Input.GetKeyDown(KeyCode.LeftShift)) // Eat
+            {
+                Debug.Log("MIAM MIAM");
+                if (closestFood.GetComponent<Creature>() != null)
+                {
+                    closestFood.GetComponent<HerbivoreBrain>().CurrentHealth = 0.0f;
+                    creature.Hunger += 10f;
+                } else
+                {
+                    creature.Hunger += 10f;
+                }
             }
         }
 
-        
+        creature.Hunger -= Game.HungerDecrementationPerUpdate;
+        creature.ReproductiveNeed -= Game.ReproductiveNeedDecrementationPerUpdate;
 
-        
     }
 
     private void Move()

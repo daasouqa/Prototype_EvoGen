@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEditor;
+using System.Collections;
 
 public class Chasser : Task
 {
@@ -40,22 +41,35 @@ public class Chasser : Task
             }
             if (minDist <= 1.0f)
             {
-                agent.GetComponent<CarnivoreBrain>().Hunger += 1.0f;
+                agent.GetComponent<Animation>().Play("attack01");
 
-                if (closestFood.GetComponent<HerbivoreBrain>().CurrentState != closestFood.GetComponent<HerbivoreBrain>().dead)
+                if (closestFood.GetComponent<CreatureBehaviorScript>() != null)
                 {
-                    closestFood.GetComponent<HerbivoreBrain>().CurrentState = closestFood.GetComponent<HerbivoreBrain>().dead;
-                }
+                    agent.GetComponent<Creature>().Hunger += 1.0f;
+                    closestFood.GetComponent<CreatureBehaviorScript>().creature.CurrentHealth -= 1.0f;
+                    // Animation damage
+                } else
+                {
 
-                Destroy(closestFood);
+                    agent.GetComponent<CarnivoreBrain>().Hunger += 1.0f;
+
+                    if (closestFood.GetComponent<HerbivoreBrain>().CurrentState != closestFood.GetComponent<HerbivoreBrain>().dead)
+                    {
+                        closestFood.GetComponent<HerbivoreBrain>().CurrentState = closestFood.GetComponent<HerbivoreBrain>().dead;
+                    }
+
+                    Destroy(closestFood);
+                }
             }
             else
             {
+                agent.GetComponent<Animation>().Play("run");
                 agent.transform.position = Vector3.MoveTowards(agent.transform.position, closestFood.transform.position,
                     agent.GetComponent<CarnivoreBrain>().Speed * Time.deltaTime);
             }
         }
     }
+
 
     //override public void exec(GameObject agent)
     //{

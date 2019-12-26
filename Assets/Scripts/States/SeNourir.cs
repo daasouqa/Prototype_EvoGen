@@ -36,72 +36,23 @@ public class SeNourir : Task
                 }
             }
 
-            if (minDist <= 5.0f)
+            if (minDist <= 10.0f)
             {
+                agent.GetComponent<Animation>().Play("attack01");
                 agent.GetComponent<HerbivoreBrain>().Hunger += 1.0f;
             } else
             {
+                agent.GetComponent<Animation>().Play("run");
+
+                Vector3 dir = closestFood.transform.position;
+
+                agent.transform.rotation = Quaternion.LookRotation(dir);
+
                 agent.transform.position = Vector3.MoveTowards(agent.transform.position, closestFood.transform.position,
                     agent.GetComponent<HerbivoreBrain>().Speed * Time.deltaTime);
             }
         }
 
-        /*if (foodNearby.Count != 0)
-        {
-            float minDist = Vector3.Distance(agent.transform.position, foodNearby[0].transform.position);
-            GameObject closestFood = foodNearby[0];
-
-            for (int i = 0; i < foodNearby.Count; i++)
-            {
-                if (Vector3.Distance(agent.transform.position, foodNearby[i].transform.position) < minDist)
-                {
-                    minDist = Vector3.Distance(agent.transform.position, foodNearby[i].transform.position);
-                    closestFood = foodNearby[i];
-                }
-            }
-
-            if (minDist <= 1.0f)
-            {
-                Debug.Log("Hunger qbel ma yakoul = " + agent.GetComponent<HerbivoreBrain>().Hunger);
-                agent.GetComponent<HerbivoreBrain>().Hunger += 1.0f;
-                Debug.Log("Hunger wra ma kla = " + agent.GetComponent<HerbivoreBrain>().Hunger);
-            }else
-            {
-                agent.transform.position = Vector3.MoveTowards(agent.transform.position, closestFood.transform.position,
-                    agent.GetComponent<HerbivoreBrain>().Speed * Time.deltaTime);
-            }
-            
-        } else
-        {
-            if (isWandering == false)
-            {
-                this.StartCoroutine(Wander());
-            }
-
-            if (isRotatingRight)
-            {
-                agent.transform.Rotate(agent.transform.up * Time.deltaTime * rotSpeed);
-            }
-
-            if (isRotatingLeft)
-            {
-                agent.transform.Rotate(agent.transform.up * Time.deltaTime * -rotSpeed);
-            }
-
-            if (isWalking)
-            {
-                if (agent.GetComponent<HerbivoreBrain>() != null)
-                {
-                    agent.transform.position += agent.transform.forward * agent.GetComponent<HerbivoreBrain>().Speed * Time.deltaTime;
-                }
-                else
-                {
-                    agent.transform.position += agent.transform.forward * agent.GetComponent<CarnivoreBrain>().Speed * Time.deltaTime;
-                }
-
-            }
-        }
-        */
     }
 
     IEnumerator Wander()

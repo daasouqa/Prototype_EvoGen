@@ -19,6 +19,8 @@ public class Fuir : Task
 
             // Find closest predator
 
+            agent.GetComponent<Animation>().Play("run");
+
             for (int i = 1; i < enemiesNearby.Count; i++)
             {
                 if (Vector3.Distance(agent.transform.position, enemiesNearby[i].transform.position) < minDistance)
@@ -29,7 +31,9 @@ public class Fuir : Task
             }
 
             // Run in the opposite direction of the closest predator
+            Vector3 dir = closestEnemy.transform.position;
 
+            agent.transform.rotation = Quaternion.LookRotation(dir);
             agent.transform.position = Vector3.MoveTowards(agent.transform.position, closestEnemy.transform.position, -1 *
                 agent.GetComponent<HerbivoreBrain>().Speed * Time.deltaTime);
         }
