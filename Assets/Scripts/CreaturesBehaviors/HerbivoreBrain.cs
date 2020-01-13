@@ -15,6 +15,13 @@ public class HerbivoreBrain : Creature
     public Task currentTask;
     public Image bar;
     public GameObject characteristics;
+    public GameObject dustEffects;
+
+    public GameObject Wall1;
+    public GameObject Wall2;
+    public GameObject Wall3;
+    public GameObject Wall4;
+
 
     private void Start()
     {
@@ -41,8 +48,45 @@ public class HerbivoreBrain : Creature
         this.CurrentHealth = Random.Range(MaxHealth / 2, MaxHealth);
         this.mCreatureType = CreatureType.HERBIVORE;
 
+        // Sex
+        int rand = Random.Range(1, 2);
+        Debug.Log("sex = " + rand);
+        this.gameObject.GetComponent<HerbivoreBrain>().mSex = rand == 1 ? Creature.Sex.FEMALE : Creature.Sex.MALE;
+
+        // Body type
+
+        rand = Random.Range(1, System.Enum.GetNames(typeof(Body.BodyType)).Length);
+        Debug.Log("body type = " + rand);
+        this.gameObject.GetComponent<HerbivoreBrain>().mBody.mBodyType = (Body.BodyType)rand;
+
+        // Head active
+        rand = Random.Range(1, System.Enum.GetNames(typeof(Head.Active)).Length);
+        Debug.Log("head active = " + rand);
+        this.gameObject.GetComponent<HerbivoreBrain>().mHead.mActive = (Head.Active)rand;
+
+        // Head passive
+        rand = Random.Range(1, System.Enum.GetNames(typeof(Head.Passive)).Length);
+        Debug.Log("head passive = " + rand);
+        this.gameObject.GetComponent<HerbivoreBrain>().mHead.mPassive = (Head.Passive)rand;
+
+        // Front limb active
+        rand = Random.Range(1, System.Enum.GetNames(typeof(Limb.Active)).Length);
+        this.gameObject.GetComponent<HerbivoreBrain>().FrontLimb.mActive = (Limb.Active)rand;
+
+        // Front limb passive
+        rand = Random.Range(1, System.Enum.GetNames(typeof(Limb.Passive)).Length);
+        this.gameObject.GetComponent<HerbivoreBrain>().FrontLimb.mPassive = (Limb.Passive)rand;
+
+        // Back limb active
+        rand = Random.Range(1, System.Enum.GetNames(typeof(Limb.Active)).Length);
+        this.gameObject.GetComponent<HerbivoreBrain>().BackLimb.mActive = (Limb.Active)rand;
+
+        // Back limb passive
+        rand = Random.Range(1, System.Enum.GetNames(typeof(Limb.Passive)).Length);
+        this.gameObject.GetComponent<HerbivoreBrain>().BackLimb.mPassive = (Limb.Passive)rand;
+
         // Initializing the initial rotation of the creature
-        //this.gameObject.transform.Rotate(this.gameObject.transform.up * Random.Range(0, 360));
+        this.gameObject.transform.Rotate(this.gameObject.transform.up * Random.Range(0, 360));
 
         // Defining the initial state of the creature
         this.CurrentState = seBalader;
@@ -67,13 +111,14 @@ public class HerbivoreBrain : Creature
             {
                 if (this.Hunger <= 0 || this.ReproductiveNeed <= 0)
                 {
-                    CurrentHealth -= 0.1f;
+                    CurrentHealth -= 0.05f;
                 }
                 else
                 {
                     List<GameObject> predators = GetDifferentTypePercepts(this.gameObject, GameObject.FindGameObjectsWithTag("creature"));
                     if (predators.Count != 0)
                     {
+                        Debug.Log("Predatores found = " + predators.Count + " By: " + gameObject);
                         CurrentState = fuir;
                     }
                     else

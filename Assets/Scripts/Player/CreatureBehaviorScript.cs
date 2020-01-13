@@ -17,6 +17,7 @@ public class CreatureBehaviorScript : MonoBehaviour
     public Image hungerBar;
     public Image reproductionBar;
 
+    public GameObject GameOverCanvas;
     public GameObject characteristicsCanvas;
     public GameObject BodyTypeText;
     public GameObject HeadText;
@@ -31,12 +32,13 @@ public class CreatureBehaviorScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        GameOverCanvas.SetActive(false);
         characteristicsCanvas.SetActive(false);
 
         creature = new Player(100);
         hasDescendant = false;
 
+        creature.Speed = 10.0f;
         creature.MaxHealth = 100f;
         creature.Hunger = 70.0f;
         creature.ReproductiveNeed = 70.0f;
@@ -64,10 +66,50 @@ public class CreatureBehaviorScript : MonoBehaviour
 
             creature.mCreatureType = Creature.CreatureType.CARNIVORE;
         }
+
+        creature.mSex = Game.playerSex;
+
+        Debug.Log("Sex = " + creature.mSex + "\nType = " + creature.mCreatureType);
     }
 
-    // Update is called once per frame
-    void Update()
+    void CheckValues()
+    {
+        if (creature.CurrentHealth > creature.MaxHealth)
+        {
+            creature.CurrentHealth = creature.MaxHealth;
+        }
+
+        if (creature.Hunger > 100f)
+        {
+            creature.Hunger = 100f;
+        }
+
+        if (creature.ReproductiveNeed > 100f)
+        {
+            creature.ReproductiveNeed = 100f;
+        }
+
+        if (creature.Hunger <= 0)
+        {
+            creature.Hunger = 0;
+            creature.CurrentHealth -= 0.05f;
+        }
+
+        if (creature.ReproductiveNeed <= 0)
+        {
+            creature.ReproductiveNeed = 0;
+            creature.CurrentHealth -= 0.05f;
+        }
+
+        if (creature.CurrentHealth <= 0)
+        {
+            GameOverCanvas.SetActive(true);
+            Time.timeScale = 0;
+            
+        }
+    }
+
+    void FillCharacteristicsCanvas()
     {
         BodyTypeText.GetComponent<TMPro.TextMeshProUGUI>().SetText("Body type: " + this.creature.mBody.mBodyType.ToString());
         HeadText.GetComponent<TMPro.TextMeshProUGUI>().SetText("Head: (A) " + this.creature.mHead.mActive.ToString()
@@ -76,6 +118,13 @@ public class CreatureBehaviorScript : MonoBehaviour
             + " (P) " + this.creature.FrontLimb.mPassive.ToString());
         BackLimbText.GetComponent<TMPro.TextMeshProUGUI>().SetText("Back limbs: (A) " + this.creature.BackLimb.mActive.ToString()
             + " (P) " + this.creature.BackLimb.mPassive.ToString());
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        CheckValues();
+        FillCharacteristicsCanvas();
 
         if (Game.isPaused)
         {
@@ -86,50 +135,26 @@ public class CreatureBehaviorScript : MonoBehaviour
         {
             characteristicsCanvas.SetActive(false);
             Time.timeScale = 1;
+
             Move();
-            if (Time.time >= nextUpdate)
-            {
-                //creature.GrowOlder();
-                nextUpdate = Mathf.FloorToInt(Time.time) + 1;
-            }
+            Reproduct();
+            Eat();
 
             bar.fillAmount = this.creature.CurrentHealth / this.creature.MaxHealth;
             hungerBar.fillAmount = this.creature.Hunger / 100f;
             reproductionBar.fillAmount = this.creature.ReproductiveNeed / 100f;
-        }
 
-        List<GameObject> creaturesNearby = creature.GetPossiblePartnersInSight(gameObject);
+            // Decrementing player needs every turn
+            creature.Hunger -= Game.HungerDecrementationPerUpdate;
+            creature.ReproductiveNeed -= Game.ReproductiveNeedDecrementationPerUpdate;
+        }
+    }
+
+
+    private void Eat()
+    {
         List<GameObject> foodNearby = creature.GetFoodNearby(gameObject, GameObject.FindObjectsOfType<GameObject>());
-
-        GameObject closestCreature = null; 
-        GameObject closestFood = null; 
-
-
-        if (creaturesNearby.Count != 0)
-        {
-            float minDistCreature = Vector3.Distance(gameObject.transform.position, creaturesNearby[0].transform.position);
-            closestCreature = creaturesNearby[0];
-
-            foreach (GameObject go in creaturesNearby)
-            {
-                if (go.GetComponent<Creature>().mCreatureType == creature.mCreatureType 
-                    && Vector3.Distance(gameObject.transform.position, go.transform.position) < minDistCreature)
-                {
-                    minDistCreature = Vector3.Distance(gameObject.transform.position, go.transform.position);
-                    closestCreature = go;
-                }
-            }
-
-            if (minDistCreature <= 3.0f 
-                && closestCreature.GetComponent<Creature>().mCreatureType == creature.mCreatureType 
-                && creature.ReproductiveNeed <= Game.minReproductionNeed)
-            {
-                ReproductInteractionCanvas.SetActive(true);
-            } else
-            {
-                ReproductInteractionCanvas.SetActive(false);
-            }
-        }
+        GameObject closestFood = null;
 
         if (foodNearby.Count != 0)
         {
@@ -155,9 +180,10 @@ public class CreatureBehaviorScript : MonoBehaviour
                 {
                     EatInteractionCanvas.SetActive(false);
                 }
-            } else
+            }
+            else
             {
-                if (minDistFood <= 5.0f)
+                if (minDistFood <= Game.proximityDistance)
                 {
                     EatInteractionCanvas.SetActive(true);
                 }
@@ -166,66 +192,82 @@ public class CreatureBehaviorScript : MonoBehaviour
                     EatInteractionCanvas.SetActive(false);
                 }
             }
-            
         }
 
-        // Checking pushed buttons for interactions
+        if (EatInteractionCanvas.activeSelf)
+        {
+            if (Input.GetKeyDown(KeyCode.LeftShift)) // Eat
+            {
+                GetComponent<Animation>().Play("attack03");
+                Debug.Log("MIAM MIAM");
+                if (closestFood.GetComponent<Creature>() != null)
+                {
+                    closestFood.GetComponent<HerbivoreBrain>().CurrentHealth = 0.0f;
+                }
+
+                creature.Hunger += 10f;
+                creature.CurrentHealth += 20f;
+            }
+        }
+        else
+        {
+            if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+            {
+                GetComponent<Animation>().Play("run");
+            }
+            else
+            {
+                GetComponent<Animation>().Play("idle01");
+            }
+
+        }
+    }
+
+    private void Reproduct()
+    {
+        List<GameObject> creaturesNearby = creature.GetPossiblePartnersInSight(gameObject);
+        GameObject closestCreature = null;
+        if (creaturesNearby.Count != 0)
+        {
+            float minDistCreature = Vector3.Distance(gameObject.transform.position, creaturesNearby[0].transform.position);
+            closestCreature = creaturesNearby[0];
+
+            foreach (GameObject go in creaturesNearby)
+            {
+                if (go.GetComponent<Creature>().mCreatureType == creature.mCreatureType
+                    && Vector3.Distance(gameObject.transform.position, go.transform.position) < minDistCreature)
+                {
+                    minDistCreature = Vector3.Distance(gameObject.transform.position, go.transform.position);
+                    closestCreature = go;
+                }
+            }
+
+            if (minDistCreature <= Game.proximityDistance && closestCreature != null
+                /*&& creature.ReproductiveNeed <= Game.minReproductionNeed*/)
+            {
+                ReproductInteractionCanvas.SetActive(true);
+            }
+            else
+            {
+                ReproductInteractionCanvas.SetActive(false);
+            }
+        }
 
         if (ReproductInteractionCanvas.activeSelf)
         {
             if (Input.GetKeyDown(KeyCode.LeftControl)) //Reproduct
             {
-                Debug.Log("CRAC CRAC");
                 Game.CreateChildPlayer(gameObject, closestCreature);
                 creature.ReproductiveNeed = 100f;
             }
         }
-        
-        if (EatInteractionCanvas.activeSelf)
-        {
-            if (Input.GetKeyDown(KeyCode.LeftShift)) // Eat
-            {
-                Debug.Log("MIAM MIAM");
-                if (closestFood.GetComponent<Creature>() != null)
-                {
-                    closestFood.GetComponent<HerbivoreBrain>().CurrentHealth = 0.0f;
-                    creature.Hunger += 10f;
-                } else
-                {
-                    creature.Hunger += 10f;
-                }
-            }
-        }
-
-        creature.Hunger -= Game.HungerDecrementationPerUpdate;
-        creature.ReproductiveNeed -= Game.ReproductiveNeedDecrementationPerUpdate;
-
     }
 
     private void Move()
     {
-         transform.Translate(Input.GetAxis("Horizontal") * Time.deltaTime * speed, 0f, Input.GetAxis("Vertical") * Time.deltaTime * speed);
+        //GetComponent<Animation>().Play("run");
+        transform.Translate(Input.GetAxis("Horizontal") * Time.deltaTime * creature.Speed, 0f, Input.GetAxis("Vertical") * Time.deltaTime * creature.Speed);
     }
-
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    Debug.Log("Possible mate found!");
-    //    reproduce();
-    //}
-
-    //private void reproduce()
-    //{
-    //    if (hasDescendant) return;
-    //    CreateDescendant();
-    //    DisableParent();
-    //}
-
-    //private void CreateDescendant()
-    //{
-    //    Vector3 newPosition = new Vector3(0, 0.6f, 0);
-    //    Instantiate(child, newPosition, transform.rotation);
-    //    child.GetComponent<CreatureBehaviorScript>().SetCreature(creature.Reproduce(new Creature(initialHealth)));       // TODO change this to the mate found
-    //}
 
     private void DisableParent()
     {

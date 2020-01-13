@@ -7,6 +7,12 @@ using static Creature;
 public class MainMenuButtonManager : MonoBehaviour
 {
     public GameObject newGameCanvas;
+    public GameObject chooseSexcanvas;
+
+    public void Restart()
+    {
+        SceneManager.LoadScene("MainMenuScene");
+    }
 
     public void NewGame()
     {
@@ -18,13 +24,28 @@ public class MainMenuButtonManager : MonoBehaviour
     {
         Game.playerType = CreatureType.HERBIVORE;
 
-        SceneManager.LoadScene("MainScene");
+        newGameCanvas.SetActive(false);
+        chooseSexcanvas.SetActive(true);
+
     }
 
     public void CarnivoreGame()
     {
         Game.playerType = CreatureType.CARNIVORE;
 
+        newGameCanvas.SetActive(false);
+        chooseSexcanvas.SetActive(true);
+    }
+
+    public void MaleGame()
+    {
+        Game.playerSex = Creature.Sex.MALE;
+        SceneManager.LoadScene("MainScene");
+    }
+
+    public void FemaleGame()
+    {
+        Game.playerSex = Creature.Sex.FEMALE;
         SceneManager.LoadScene("MainScene");
     }
 

@@ -9,6 +9,11 @@ public class SeReproduire : Task
         this.name = "Se Reproduire";
     }
 
+    private void Start()
+    {
+        this.name = "Se reproduire";
+    }
+
     public float rotSpeed;
 
     public bool isWandering = false;
@@ -33,7 +38,7 @@ public class SeReproduire : Task
             if (possiblePartners.Count != 0)
             {
                 int maxSimilarities = 0;
-                GameObject bestPartner = possiblePartners[0];
+                GameObject bestPartner = null;
 
                 for (int i = 0; i < possiblePartners.Count; i++)
                 {
@@ -84,23 +89,28 @@ public class SeReproduire : Task
 
                 if (isWalking)
                 {
-                    agent.GetComponent<Animation>().Play("run");
+                    agent.GetComponent<Animation>().Play("walk");
                     agent.transform.position += agent.transform.forward * agent.GetComponent<Creature>().Speed * Time.deltaTime;
                 }
             }
         } else
         {
-            if (Vector3.Distance(agent.transform.position, partner.transform.position) <= 1.0f)
+            if (partner != null)
             {
-                agent.GetComponent<Creature>().ReproductiveNeed = 100f;
-                Game.CreateChild(agent, partner);
-                partner = null;
-            } else
-            {
-                agent.GetComponent<Animation>().Play("walk");
-                agent.transform.position = Vector3.MoveTowards(agent.transform.position, partner.transform.position,
-                    agent.GetComponent<Creature>().Speed * Time.deltaTime);
+                if (Vector3.Distance(agent.transform.position, partner.transform.position) <= Game.proximityDistance)
+                {
+                    agent.GetComponent<Creature>().ReproductiveNeed = 100f;
+                    Game.CreateChild(agent, partner);
+                    partner = null;
+                }
+                else
+                {
+                    agent.GetComponent<Animation>().Play("walk");
+                    agent.transform.position = Vector3.MoveTowards(agent.transform.position, partner.transform.position,
+                        agent.GetComponent<Creature>().Speed * Time.deltaTime);
+                }
             }
+            
         }
     }
 

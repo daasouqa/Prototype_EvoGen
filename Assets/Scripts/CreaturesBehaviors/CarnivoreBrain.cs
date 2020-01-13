@@ -17,6 +17,12 @@ public class CarnivoreBrain : Creature
 
     public Image bar;
     public GameObject characteristics;
+    public GameObject dustEffects;
+
+    public GameObject Wall1;
+    public GameObject Wall2;
+    public GameObject Wall3;
+    public GameObject Wall4;
 
 
     void Start()
@@ -27,13 +33,9 @@ public class CarnivoreBrain : Creature
 
         // Initializing the possible states for the creature
         this.seBalader = this.gameObject.AddComponent<SeBalader>();
-        seBalader.name = "Se Balader";
         this.chasser = this.gameObject.AddComponent<Chasser>();
-        chasser.name = "Chasser";
         this.seReproduire = this.gameObject.AddComponent<SeReproduire>();
-        seReproduire.name = "Se Reproduire";
         this.dead = this.gameObject.AddComponent<Dead>();
-        dead.name = "Dead";
 
         // Defining the initial state of the creature
         this.CurrentState = seBalader;
@@ -46,15 +48,48 @@ public class CarnivoreBrain : Creature
         this.mCreatureType = CreatureType.CARNIVORE;
 
         // Initializing the initial rotation of the creature
-        //this.gameObject.transform.Rotate(this.gameObject.transform.up * Random.Range(0, 360));
+        this.gameObject.transform.Rotate(this.gameObject.transform.up * Random.Range(0, 360));
 
-        this.mHead.mActive = Head.Active.crocs;
-        this.mHead.mPassive = Head.Passive.Dents_sec;
-        this.mBody.mBodyType = Body.BodyType.fourrure;
-        this.FrontLimb.mActive = Limb.Active.Griffes;
-        this.FrontLimb.mPassive = Limb.Passive.Pattes_longues;
-        this.BackLimb.mActive = Limb.Active.Griffes;
-        this.BackLimb.mPassive = Limb.Passive.Pattes_longues;
+        // Sex
+        int rand = Random.Range(1, 2);
+        this.GetComponent<CarnivoreBrain>().mSex = rand == 1 ? Creature.Sex.FEMALE : Creature.Sex.MALE;
+
+        // Body type
+        Random.seed = System.DateTime.Now.Millisecond;
+        rand = Random.Range(1, System.Enum.GetNames(typeof(Body.BodyType)).Length);
+        this.GetComponent<CarnivoreBrain>().mBody.mBodyType = (Body.BodyType)rand;
+
+        Random.seed = System.DateTime.Now.Millisecond;
+        // Head active
+        rand = Random.Range(1, System.Enum.GetNames(typeof(Head.Active)).Length);
+        this.GetComponent<CarnivoreBrain>().mHead.mActive = (Head.Active)rand;
+
+        Random.seed = System.DateTime.Now.Millisecond;
+        // Head passive
+        rand = Random.Range(1, System.Enum.GetNames(typeof(Head.Passive)).Length);
+        this.GetComponent<CarnivoreBrain>().mHead.mPassive = (Head.Passive)rand;
+
+        Random.seed = System.DateTime.Now.Millisecond;
+        // Front limb active
+        rand = Random.Range(1, System.Enum.GetNames(typeof(Limb.Active)).Length);
+        this.GetComponent<CarnivoreBrain>().FrontLimb.mActive = (Limb.Active)rand;
+
+        Random.seed = System.DateTime.Now.Millisecond;
+        // Front limb passive
+        rand = Random.Range(1, System.Enum.GetNames(typeof(Limb.Passive)).Length);
+        this.GetComponent<CarnivoreBrain>().FrontLimb.mPassive = (Limb.Passive)rand;
+
+        Random.seed = System.DateTime.Now.Millisecond;
+        // Back limb active
+        rand = Random.Range(1, System.Enum.GetNames(typeof(Limb.Active)).Length);
+        this.GetComponent<CarnivoreBrain>().BackLimb.mActive = (Limb.Active)rand;
+
+        Random.seed = System.DateTime.Now.Millisecond;
+        // Back limb passive
+        rand = Random.Range(1, System.Enum.GetNames(typeof(Limb.Passive)).Length);
+        this.BackLimb.mPassive = (Limb.Passive)rand;
+
+
     }
 
     // Update is called once per frame

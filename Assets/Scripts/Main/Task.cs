@@ -15,5 +15,6 @@ public abstract class Task : MonoBehaviour
         this.name = name;
     }
 
+
     public abstract void exec(GameObject agent);
 }

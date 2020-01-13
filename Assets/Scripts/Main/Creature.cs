@@ -155,13 +155,16 @@ public class Creature : MonoBehaviour
             {
                 if (go.GetComponent<CreatureBehaviorScript>().creature.mCreatureType != myself.GetComponent<Creature>().mCreatureType)
                 {
-                    percepts.Add(go);
+                    if (Vector3.Distance(myself.gameObject.transform.position, go.transform.position) <= Game.visionRadius)
+                    {
+                        percepts.Add(go);
+                    }
                 }
             } else
             {
                 if (go.GetComponent<Creature>().creatureType != myself.GetComponent<Creature>().mCreatureType)
                 {
-                    if (Vector3.Distance(myself.gameObject.transform.position, go.transform.position) < Game.visionRadius)
+                    if (Vector3.Distance(myself.gameObject.transform.position, go.transform.position) <= Game.visionRadius)
                     {
                         if (myself != go)
                         {
@@ -260,6 +263,8 @@ public class Creature : MonoBehaviour
         return percepts;
     }
 
+    
+
     // Returns possible reproduction partners
     public List<GameObject> GetPossiblePartnersInSight(GameObject me)
     {
@@ -286,6 +291,11 @@ public class Creature : MonoBehaviour
 
     private void OnMouseDown()
     {
+        characteristicsCanvas.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "Sex: " + (mSex == Sex.MALE ? "M" : "F");
+        characteristicsCanvas.transform.GetChild(1).GetComponent<TMPro.TextMeshProUGUI>().text = "Body type: " + mBody.mBodyType;
+        characteristicsCanvas.transform.GetChild(2).GetComponent<TMPro.TextMeshProUGUI>().text = "Head: " + mHead.mActive + " | " + mHead.mPassive;
+        characteristicsCanvas.transform.GetChild(3).GetComponent<TMPro.TextMeshProUGUI>().text = "Front limbs: " + FrontLimb.mActive + " | " + FrontLimb.mPassive;
+        characteristicsCanvas.transform.GetChild(4).GetComponent<TMPro.TextMeshProUGUI>().text = "Back limbs: " + BackLimb.mActive + " | " + BackLimb.mPassive;
         characteristicsCanvas.SetActive(!characteristicsCanvas.activeSelf);
     }
 

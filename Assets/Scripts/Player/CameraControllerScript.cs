@@ -7,7 +7,9 @@ public class CameraControllerScript : MonoBehaviour
     public float speed = 5.0f;
     public GameObject myPlayer;
     private Vector3 mouseOrigin;    
-    private bool isRotating;   
+    private bool isRotating;
+
+ 
 
     void Update()
     {

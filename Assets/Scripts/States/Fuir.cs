@@ -9,6 +9,11 @@ public class Fuir : Task
         this.name = "Fuir";
     }
 
+    private void Start()
+    {
+        this.name = "Fuir";
+    }
+
     public override void exec(GameObject agent)
     {
         List<GameObject> enemiesNearby = new Creature().GetDifferentTypePercepts(agent ,GameObject.FindGameObjectsWithTag("creature"));

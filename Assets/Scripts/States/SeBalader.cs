@@ -19,6 +19,7 @@ public class SeBalader : Task
 
     private void Start()
     {
+        this.name = "Chasser";
         rotSpeed = 15.0f;
     }
 
@@ -45,7 +46,7 @@ public class SeBalader : Task
 
         if (isWalking)
         {
-            agent.GetComponent<Animation>().Play("run");
+            agent.GetComponent<Animation>().Play("walk");
             if (agent.GetComponent<HerbivoreBrain>() != null)
             {
                 agent.transform.position += agent.transform.forward * agent.GetComponent<HerbivoreBrain>().Speed * Time.deltaTime;

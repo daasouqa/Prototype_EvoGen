@@ -7,13 +7,18 @@ public class Chasser : Task
 {
     public Chasser(string name) : base(name) {}
 
+    private void Start()
+    {
+        this.name = "Chasser";
+    }
+
     public override void exec(GameObject agent)
     {
         GameObject[] food = GameObject.FindGameObjectsWithTag("creature");
         if (food.Length != 0)
         {
             float minDist = Vector3.Distance(agent.transform.position, food[0].transform.position);
-            GameObject closestFood = food[0];
+            GameObject closestFood = null;
 
             for (int i = 0; i < food.Length; i++)
             {
@@ -39,34 +44,42 @@ public class Chasser : Task
                     }
                 }
             }
-            if (minDist <= 1.0f)
+
+            if (closestFood != null)
             {
-                agent.GetComponent<Animation>().Play("attack01");
-
-                if (closestFood.GetComponent<CreatureBehaviorScript>() != null)
+                if (minDist <= Game.proximityDistance)
                 {
-                    agent.GetComponent<Creature>().Hunger += 1.0f;
-                    closestFood.GetComponent<CreatureBehaviorScript>().creature.CurrentHealth -= 1.0f;
-                    // Animation damage
-                } else
-                {
+                    agent.GetComponent<Animation>().Play("attack01");
 
-                    agent.GetComponent<CarnivoreBrain>().Hunger += 1.0f;
-
-                    if (closestFood.GetComponent<HerbivoreBrain>().CurrentState != closestFood.GetComponent<HerbivoreBrain>().dead)
+                    if (closestFood.GetComponent<CreatureBehaviorScript>() != null)
                     {
-                        closestFood.GetComponent<HerbivoreBrain>().CurrentState = closestFood.GetComponent<HerbivoreBrain>().dead;
+                        agent.GetComponent<Creature>().Hunger += 1.0f;
+                        closestFood.GetComponent<CreatureBehaviorScript>().creature.CurrentHealth -= 1.0f;
+                        closestFood.GetComponent<Animation>().Play("damage");
                     }
+                    else
+                    {
+                        Debug.Log("Chasing: " + closestFood);
 
-                    Destroy(closestFood);
+                        agent.GetComponent<CarnivoreBrain>().Hunger += 1.0f;
+
+                        if (closestFood.GetComponent<HerbivoreBrain>().CurrentState != closestFood.GetComponent<HerbivoreBrain>().dead)
+                        {
+                            closestFood.GetComponent<HerbivoreBrain>().CurrentState = closestFood.GetComponent<HerbivoreBrain>().dead;
+                        }
+
+                        Destroy(closestFood);
+                    }
+                }
+                else
+                {
+                    agent.GetComponent<Animation>().Play("run");
+                    agent.transform.position = Vector3.MoveTowards(agent.transform.position, closestFood.transform.position,
+                        agent.GetComponent<CarnivoreBrain>().Speed * Time.deltaTime);
                 }
             }
-            else
-            {
-                agent.GetComponent<Animation>().Play("run");
-                agent.transform.position = Vector3.MoveTowards(agent.transform.position, closestFood.transform.position,
-                    agent.GetComponent<CarnivoreBrain>().Speed * Time.deltaTime);
-            }
+
+            
         }
     }
 

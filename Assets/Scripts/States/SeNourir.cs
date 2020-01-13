@@ -16,6 +16,11 @@ public class SeNourir : Task
         this.name = "Se Nourir";
     }
 
+    private void Start()
+    {
+        this.name = "Se nourrir";
+    }
+
     public override void exec(GameObject agent)
     {
         //List<GameObject> foodNearby = new Creature().GetPercepts(agent, GameObject.FindGameObjectsWithTag("herbe"));
@@ -36,13 +41,13 @@ public class SeNourir : Task
                 }
             }
 
-            if (minDist <= 10.0f)
+            if (minDist <= Game.proximityDistance)
             {
                 agent.GetComponent<Animation>().Play("attack01");
                 agent.GetComponent<HerbivoreBrain>().Hunger += 1.0f;
             } else
             {
-                agent.GetComponent<Animation>().Play("run");
+                agent.GetComponent<Animation>().Play("walk");
 
                 Vector3 dir = closestFood.transform.position;
 

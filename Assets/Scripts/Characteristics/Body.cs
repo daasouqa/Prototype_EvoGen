@@ -8,7 +8,7 @@ public class Body : Characteristic
         peau_base,
         fourrure ,
         plumes   ,
-        Žcailles ,
+        ecailles ,
         voile    ,
         cameleon ,
         carapace ,
